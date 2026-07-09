@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Couple {
+  id           String        @id @default(cuid())
+  displayName  String
+  codeHash     String
+  startDate    DateTime
+  avatarUrl    String?
+  theme        String        @default("rose")
+  appName      String        @default("MyLove")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  users        User[]
+  memories     Memory[]
+  loveNotes    LoveNote[]
+  tingTings    TingTing[]
+  specialDays  SpecialDay[]
+  gallery      GalleryImage[]
+  settings     Settings?
+}
+
+model User {
+  id             String         @id @default(cuid())
+  coupleId       String
+  slot           Int            // 1 or 2
+  name           String
+  nickname       String?
+  birthday       DateTime?
+  favoriteColor  String?
+  noteAbout      String?        @db.Text
+  avatarUrl      String?
+  passwordHash   String
+  sessionVersion Int            @default(1)
+  lastSeenAt     DateTime       @default(now())
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  couple         Couple         @relation(fields: [coupleId], references: [id], onDelete: Cascade)
+  sentTingTings  TingTing[]     @relation("Sender")
+  notes          LoveNote[]
+  gallery        GalleryImage[]
+  memories       Memory[]
+
+  @@unique([coupleId, slot])
+}
+
+model Memory {
+  id           String         @id @default(cuid())
+  coupleId     String
+  title        String
+  description  String         @db.Text
+  happenedAt   DateTime
+  tags         String[]
+  coverImageUrl String?
+  createdById  String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  couple       Couple         @relation(fields: [coupleId], references: [id], onDelete: Cascade)
+  createdBy    User           @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  gallery      GalleryImage[]
+}
+
+model LoveNote {
+  id           String    @id @default(cuid())
+  coupleId     String
+  senderId     String
+  body         String    @db.Text
+  pinned       Boolean   @default(false)
+  readAt       DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  couple       Couple    @relation(fields: [coupleId], references: [id], onDelete: Cascade)
+  sender       User      @relation(fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+model TingTing {
+  id           String    @id @default(cuid())
+  coupleId     String
+  senderId     String
+  receiverId   String?   // null targets the partner
+  type         String    // e.g., "MISS_YOU", "HUG", "KISS", "CUSTOM", etc.
+  message      String?
+  readAt       DateTime?
+  createdAt    DateTime  @default(now())
+
+  couple       Couple    @relation(fields: [coupleId], references: [id], onDelete: Cascade)
+  sender       User      @relation("Sender", fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+model SpecialDay {
+  id            String   @id @default(cuid())
+  coupleId      String
+  title         String
+  date          DateTime
+  type          String   // e.g., "BIRTHDAY", "ANNIVERSARY", "DATED", "CUSTOM"
+  note          String?  @db.Text
+  repeatsYearly Boolean  @default(true)
+  createdById   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  couple        Couple   @relation(fields: [coupleId], references: [id], onDelete: Cascade)
+}
+
+model GalleryImage {
+  id           String   @id @default(cuid())
+  coupleId     String
+  memoryId     String?
+  url          String
+  pathname     String
+  caption      String?
+  uploadedById String
+  createdAt    DateTime @default(now())
+
+  couple       Couple   @relation(fields: [coupleId], references: [id], onDelete: Cascade)
+  uploadedBy   User     @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+  memory       Memory?  @relation(fields: [memoryId], references: [id], onDelete: SetNull)
+}
+
+model Settings {
+  id             String   @id @default(cuid())
+  coupleId       String   @unique
+  theme          String   @default("system")
+  appName        String   @default("MyLove")
+  pollingSeconds Int      @default(20)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  couple         Couple   @relation(fields: [coupleId], references: [id], onDelete: Cascade)
+}

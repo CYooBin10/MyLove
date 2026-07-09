@@ -1,0 +1,38 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { BellDot, Images, UserRound } from "lucide-react";
+import { HEADER_TITLES } from "@/lib/constants";
+import { Avatar } from "@/components/ui/avatar";
+import { useSessionState } from "@/components/providers/app-providers";
+
+export function TopAppBar() {
+  const pathname = usePathname();
+  const { session } = useSessionState();
+  const title = HEADER_TITLES[pathname] || session.couple?.appName || "MyLove";
+  const me = session.couple?.users.find((u) => u.id === session.user?.id) || session.user;
+
+  return (
+    <header className="safe-top sticky top-0 z-30 border-b border-border/60 bg-background/92 px-4 pb-3 pt-3 backdrop-blur">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <p className="text-xs text-muted-foreground">MyLove private app</p>
+          <h1 className="text-lg font-bold text-foreground">{title}</h1>
+        </div>
+        <div className="flex items-center gap-2">
+          <Link href="/gallery" className="flex h-11 w-11 items-center justify-center rounded-full bg-card text-foreground shadow-soft">
+            <Images className="h-5 w-5" />
+          </Link>
+          <Link href="/notes" className="relative flex h-11 w-11 items-center justify-center rounded-full bg-card text-foreground shadow-soft">
+            <BellDot className="h-5 w-5" />
+            {(session.unread?.notes || 0) > 0 ? <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-primary" /> : null}
+          </Link>
+          <Link href="/profile" className="flex items-center gap-2 rounded-full bg-card px-2 py-1 shadow-soft">
+            {me ? <Avatar src={me.avatarUrl} name={me.name} size="sm" /> : <UserRound className="h-4 w-4" />}
+          </Link>
+        </div>
+      </div>
+    </header>
+  );
+}

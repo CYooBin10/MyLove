@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 343 60% 98%;
+    --foreground: 336 24% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 336 24% 15%;
+    --primary: 349 76% 64%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 252 100% 70%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 336 12% 92%;
+    --muted-foreground: 336 12% 40%;
+    --accent: 12 100% 82%;
+    --accent-foreground: 336 24% 15%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 336 15% 90%;
+    --input: 336 15% 90%;
+    --ring: 349 76% 64%;
+
+    --radius-xl: 24px;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+  }
+
+  .dark {
+    --background: 280 20% 8%;
+    --foreground: 300 20% 95%;
+    --card: 280 18% 12%;
+    --card-foreground: 300 20% 95%;
+    --primary: 349 85% 72%;
+    --primary-foreground: 280 20% 8%;
+    --secondary: 252 80% 80%;
+    --secondary-foreground: 280 20% 8%;
+    --muted: 280 12% 20%;
+    --muted-foreground: 290 10% 72%;
+    --accent: 12 80% 82%;
+    --accent-foreground: 280 20% 8%;
+    --destructive: 0 75% 65%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 280 12% 22%;
+    --input: 280 12% 22%;
+    --ring: 349 85% 72%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-background text-foreground antialiased font-sans select-none overflow-x-hidden;
+  }
+}
+
+/* Material Design styling adjustments */
+input, textarea {
+  @apply focus:ring-2 focus:ring-primary focus:border-transparent transition-all;
+}
+
+.safe-top {
+  padding-top: max(1rem, env(safe-area-inset-top));
+}
+
+.safe-bottom {
+  padding-bottom: max(1.2rem, env(safe-area-inset-bottom));
+}
+
+/* Custom Scrollbar for mobile layouts */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/20 rounded-full;
+}
