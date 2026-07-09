@@ -1,4 +1,4 @@
-import { ZodSchema } from "zod";
+import { z, type ZodTypeAny } from "zod";
 import { NextResponse } from "next/server";
 
 export class ApiError extends Error {
@@ -43,7 +43,7 @@ export function jsonError(error: unknown) {
   return NextResponse.json({ error: "Có lỗi xảy ra." }, { status: 500 });
 }
 
-export async function parseJson<T>(request: Request, schema: ZodSchema<T>) {
+export async function parseJson<T extends ZodTypeAny>(request: Request, schema: T): Promise<z.infer<T>> {
   const body = await request.json();
   const parsed = schema.safeParse(body);
   if (!parsed.success) {
