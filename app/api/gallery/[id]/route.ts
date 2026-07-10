@@ -17,10 +17,16 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     await ensureImage(id, couple.id);
     const data = await parseJson(request, galleryImageSchema.partial());
     const { safeUser } = await import("@/lib/safe-data");
+
+    if (data.memoryId) {
+      const memory = await prisma.memory.findFirst({ where: { id: data.memoryId, coupleId: couple.id } });
+      if (!memory) throw new ApiError("Kỷ niệm được tham chiếu không thuộc cặp đôi của bạn.", 403);
+    }
+
     const image = await prisma.galleryImage.update({
       where: { id },
       data: { caption: data.caption, memoryId: data.memoryId || null },
-      include: { uploadedBy: true },
+      include: { uploadedBy: true, memory: true },
     });
     return ok({ image: { ...image, uploadedBy: safeUser(image.uploadedBy) } });
   } catch (err) {

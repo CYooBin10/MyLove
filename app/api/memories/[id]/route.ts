@@ -1,10 +1,11 @@
 import { prisma } from "@/lib/db";
 import { ApiError, jsonError, ok, parseJson } from "@/lib/api";
 import { requireAuth } from "@/lib/auth/require-auth";
+import { deleteImage } from "@/lib/blob";
 import { memorySchema } from "@/lib/validations/memory";
 
 async function ensureMemory(id: string, coupleId: string) {
-  const memory = await prisma.memory.findUnique({ where: { id }, include: { createdBy: true } });
+  const memory = await prisma.memory.findUnique({ where: { id }, include: { createdBy: true, gallery: { orderBy: { createdAt: "desc" } } } });
   if (!memory || memory.coupleId !== coupleId) throw new ApiError("Không tìm thấy kỷ niệm.", 404);
   return memory;
 }
@@ -25,9 +26,14 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   try {
     const { couple } = await requireAuth();
     const { id } = await params;
-    await ensureMemory(id, couple.id);
+    const existing = await ensureMemory(id, couple.id);
     const data = await parseJson(request, memorySchema);
     const { safeUser } = await import("@/lib/safe-data");
+
+    if (existing.coverImagePathname && data.coverImagePathname && existing.coverImagePathname !== data.coverImagePathname) {
+      await deleteImage(existing.coverImagePathname).catch(() => undefined);
+    }
+
     const memory = await prisma.memory.update({
       where: { id },
       data: {
@@ -36,8 +42,9 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         happenedAt: new Date(data.happenedAt),
         tags: data.tags,
         coverImageUrl: data.coverImageUrl,
+        coverImagePathname: data.coverImagePathname || null,
       },
-      include: { createdBy: true },
+      include: { createdBy: true, gallery: { orderBy: { createdAt: "desc" } } },
     });
     return ok({ memory: { ...memory, createdBy: safeUser(memory.createdBy) } });
   } catch (err) {
@@ -49,7 +56,10 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
   try {
     const { couple } = await requireAuth();
     const { id } = await params;
-    await ensureMemory(id, couple.id);
+    const memory = await ensureMemory(id, couple.id);
+    if (memory.coverImagePathname) {
+      await deleteImage(memory.coverImagePathname).catch(() => undefined);
+    }
     await prisma.memory.delete({ where: { id } });
     return ok({ success: true });
   } catch (err) {

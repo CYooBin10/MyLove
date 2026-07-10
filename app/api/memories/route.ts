@@ -9,7 +9,7 @@ export async function GET() {
     const { safeUser } = await import("@/lib/safe-data");
     const memories = await prisma.memory.findMany({
       where: { coupleId: couple.id },
-      include: { createdBy: true },
+      include: { createdBy: true, gallery: { orderBy: { createdAt: "desc" } } },
       orderBy: [{ happenedAt: "desc" }, { createdAt: "desc" }],
     });
     const safeMemories = memories.map(m => ({ ...m, createdBy: safeUser(m.createdBy) }));
@@ -33,8 +33,9 @@ export async function POST(request: Request) {
         happenedAt: new Date(data.happenedAt),
         tags: data.tags,
         coverImageUrl: data.coverImageUrl,
+        coverImagePathname: data.coverImagePathname || null,
       },
-      include: { createdBy: true },
+      include: { createdBy: true, gallery: true },
     });
     return ok({ memory: { ...memory, createdBy: safeUser(memory.createdBy) } }, { status: 201 });
   } catch (err) {

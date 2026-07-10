@@ -53,16 +53,17 @@ model User {
 }
 
 model Memory {
-  id           String         @id @default(cuid())
-  coupleId     String
-  title        String
-  description  String         @db.Text
-  happenedAt   DateTime
-  tags         String[]
-  coverImageUrl String?
-  createdById  String
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  id                String         @id @default(cuid())
+  coupleId          String
+  title             String
+  description       String         @db.Text
+  happenedAt        DateTime
+  tags              String[]
+  coverImageUrl     String?
+  coverImagePathname String?
+  createdById       String
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
 
   couple       Couple         @relation(fields: [coupleId], references: [id], onDelete: Cascade)
   createdBy    User           @relation(fields: [createdById], references: [id], onDelete: Cascade)
@@ -125,6 +126,9 @@ model GalleryImage {
   couple       Couple   @relation(fields: [coupleId], references: [id], onDelete: Cascade)
   uploadedBy   User     @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
   memory       Memory?  @relation(fields: [memoryId], references: [id], onDelete: SetNull)
+
+  @@index([coupleId, createdAt])
+  @@index([coupleId, memoryId, createdAt])
 }
 
 model Settings {

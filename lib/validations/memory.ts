@@ -6,4 +6,5 @@ export const memorySchema = z.object({
   happenedAt: z.string().min(1),
   tags: z.array(z.string().max(30)).max(8).default([]),
   coverImageUrl: z.string().url().optional().nullable(),
+  coverImagePathname: z.string().optional().nullable(),
 });

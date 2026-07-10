@@ -5,7 +5,7 @@ export type CoupleBundle = SafeCouple;
 export type SafeUserType = SafeUser;
 
 export type MemoryWithUser = Prisma.MemoryGetPayload<{
-  include: { createdBy: true };
+  include: { createdBy: true; gallery: true };
 }>;
 
 export type NoteWithSender = Prisma.LoveNoteGetPayload<{
