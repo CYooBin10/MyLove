@@ -14,23 +14,25 @@ export function TopAppBar() {
   const me = session.couple?.users.find((u) => u.id === session.user?.id) || session.user;
 
   return (
-    <header className="safe-top sticky top-0 z-30 border-b border-border/60 bg-background/92 px-4 pb-3 pt-3 backdrop-blur">
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <p className="text-xs text-muted-foreground">MyLove private app</p>
-          <h1 className="text-lg font-bold text-foreground">{title}</h1>
-        </div>
-        <div className="flex items-center gap-2">
-          <Link href="/gallery" className="flex h-11 w-11 items-center justify-center rounded-full bg-card text-foreground shadow-soft">
-            <Images className="h-5 w-5" />
-          </Link>
-          <Link href="/notes" className="relative flex h-11 w-11 items-center justify-center rounded-full bg-card text-foreground shadow-soft">
-            <BellDot className="h-5 w-5" />
-            {(session.unread?.notes || 0) > 0 ? <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-primary" /> : null}
-          </Link>
-          <Link href="/profile" className="flex items-center gap-2 rounded-full bg-card px-2 py-1 shadow-soft">
-            {me ? <Avatar src={me.avatarUrl} name={me.name} size="sm" /> : <UserRound className="h-4 w-4" />}
-          </Link>
+    <header className="safe-top sticky top-0 z-30 bg-background/70 px-4 pb-3 pt-3 backdrop-blur-xl">
+      <div className="rounded-[28px] bg-white/55 px-4 py-3 shadow-[0_18px_50px_-36px_rgba(88,39,52,0.65)] backdrop-blur-md dark:bg-card/55">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-[11px] font-semibold text-muted-foreground">MyLove private app</p>
+            <h1 className="text-lg font-black text-foreground">{title}</h1>
+          </div>
+          <div className="flex items-center gap-2">
+            <Link href="/gallery" className="flex h-11 w-11 items-center justify-center rounded-full bg-white/75 text-foreground shadow-[0_12px_30px_-22px_rgba(88,39,52,0.55)] dark:bg-card/80">
+              <Images className="h-5 w-5" />
+            </Link>
+            <Link href="/notes" className="relative flex h-11 w-11 items-center justify-center rounded-full bg-white/75 text-foreground shadow-[0_12px_30px_-22px_rgba(88,39,52,0.55)] dark:bg-card/80">
+              <BellDot className="h-5 w-5" />
+              {(session.unread?.notes || 0) > 0 ? <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-primary" /> : null}
+            </Link>
+            <Link href="/profile" className="flex items-center gap-2 rounded-full bg-white/75 px-2 py-1 shadow-[0_12px_30px_-22px_rgba(88,39,52,0.55)] dark:bg-card/80">
+              {me ? <Avatar src={me.avatarUrl} name={me.name} size="sm" /> : <UserRound className="h-4 w-4" />}
+            </Link>
+          </div>
         </div>
       </div>
     </header>

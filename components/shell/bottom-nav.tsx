@@ -11,8 +11,8 @@ export function BottomNav() {
   const { session } = useSessionState();
 
   return (
-    <nav className="safe-bottom fixed bottom-0 left-1/2 z-40 w-full max-w-[480px] -translate-x-1/2 border-t border-border/70 bg-card/96 px-2 pb-2 pt-2 backdrop-blur">
-      <div className="grid grid-cols-5 gap-1">
+    <nav className="safe-bottom fixed bottom-0 left-1/2 z-40 w-full max-w-[480px] -translate-x-1/2 px-3 pb-3 pt-2">
+      <div className="grid grid-cols-5 gap-1 rounded-[30px] bg-white/75 p-1.5 shadow-[0_-18px_55px_-36px_rgba(88,39,52,0.7)] backdrop-blur-xl dark:bg-card/80">
         {NAV_ITEMS.map((item) => {
           const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
           const Icon = item.icon;
@@ -23,8 +23,8 @@ export function BottomNav() {
               key={item.href}
               href={item.href}
               className={cn(
-                "relative flex min-h-14 flex-col items-center justify-center rounded-2xl px-2 text-[11px] font-medium transition active:scale-[0.98]",
-                active ? "bg-primary/12 text-primary" : "text-muted-foreground"
+                "relative flex min-h-14 flex-col items-center justify-center rounded-[24px] px-2 text-[11px] font-medium transition active:scale-[0.98]",
+                active ? "bg-primary/14 text-primary shadow-[0_12px_30px_-22px_rgba(232,93,117,0.8)]" : "text-muted-foreground"
               )}
             >
               <Icon className="mb-1 h-5 w-5" />

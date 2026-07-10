@@ -130,7 +130,7 @@ export function AnimatedCoupleAvatars({ users, triggerKey = 0 }: Props) {
     return (
       <div className="mb-4 flex justify-center -space-x-4 select-none">
         {visibleUsers.map((user) => (
-          <Avatar key={user.id} src={user.avatarUrl} name={user.name} size="xl" className="ring-4 ring-card" />
+          <Avatar key={user.id} src={user.avatarUrl} name={user.name} size="xl" className="ring-4 ring-white/70 border-white/50 dark:ring-card/80 dark:border-white/10" />
         ))}
       </div>
     );
@@ -177,10 +177,10 @@ export function AnimatedCoupleAvatars({ users, triggerKey = 0 }: Props) {
                 src={user.avatarUrl}
                 name={user.name}
                 size="xl"
-                className={`ring-4 ring-card transition-all duration-300 w-24 h-24 border-border/60 ${
+                className={`ring-4 ring-white/70 border-white/50 transition-all duration-300 w-24 h-24 dark:ring-card/85 dark:border-white/10 ${
                   pulse
-                    ? "ring-primary/20 shadow-[0_0_24px_rgba(232,93,117,0.5)] border-primary/40 scale-105"
-                    : "shadow-soft"
+                    ? "ring-primary/40 shadow-[0_0_32px_rgba(232,93,117,0.75)] border-primary/50 scale-105"
+                    : "shadow-[0_12px_36px_-16px_rgba(232,93,117,0.85)]"
                 }`}
               />
             </div>

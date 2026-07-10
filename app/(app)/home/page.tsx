@@ -42,97 +42,116 @@ export default function HomePage() {
   }
 
   return (
-    <ScreenContainer className="space-y-4 pb-32">
-      {/* 1. Dynamic Greeting Header */}
-      <div className="px-1 py-1">
-        <h2 className="text-xl font-extrabold tracking-tight text-foreground/90">{greeting}</h2>
-        <p className="text-xs text-muted-foreground mt-0.5">Chào mừng về không gian riêng của hai đứa</p>
-      </div>
+    <ScreenContainer className="relative space-y-4 overflow-visible pb-36">
+      <div className="pointer-events-none absolute -left-20 top-2 h-56 w-56 rounded-full bg-primary/15 blur-3xl" />
+      <div className="pointer-events-none absolute -right-24 top-56 h-60 w-60 rounded-full bg-amber-200/30 blur-3xl dark:bg-secondary/10" />
 
-      {/* 2. Premium Glow Hero Card */}
-      <Card className="relative overflow-visible p-6 text-center border-primary/10 shadow-soft bg-gradient-to-b from-card to-background/50">
-        {/* Glow Effects */}
-        <div className="absolute inset-0 overflow-hidden rounded-[inherit] pointer-events-none">
-          <div className="absolute left-1/2 top-0 h-48 w-72 -translate-x-1/2 rounded-full bg-primary/10 blur-[50px] dark:bg-primary/5" />
-          <div className="absolute right-4 top-4 h-12 w-12 rounded-full bg-amber-400/5 blur-xl" />
+      <div className="relative z-10 space-y-4">
+        <div className="px-1 pt-1">
+          <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-white/60 px-3 py-1 text-[11px] font-semibold text-primary shadow-[0_10px_30px_-24px_rgba(232,93,117,0.8)] backdrop-blur-md dark:bg-card/60">
+            <Heart className="h-3.5 w-3.5 fill-current" />
+            Chỉ riêng hai đứa
+          </div>
+          <h2 className="text-2xl font-black tracking-tight text-foreground/95">{greeting}</h2>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">Một góc nhỏ để nhớ, thương và gửi nhau mấy điều ngọt xíu.</p>
         </div>
 
-        <div className="relative z-10">
-          {/* Avatar Interaction duo */}
-          <AnimatedCoupleAvatars users={users} triggerKey={comboKey} />
-
-          <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted-foreground/80 mt-2">Chúng ta đã thương nhau</p>
-
-          <div className="my-2 flex justify-center relative">
-            <button
-              type="button"
-              onClick={triggerTapCombo}
-              className="group relative inline-flex items-center justify-center rounded-[32px] bg-primary/6 px-8 py-2 border border-primary/10 active:scale-[0.97] transition-all duration-300 shadow-[inset_0_2px_8px_rgba(232,93,117,0.06)] hover:bg-primary/10"
-              aria-label="Tạo hiệu ứng"
-            >
-              <span className="font-serif text-[72px] font-extrabold leading-none text-primary tracking-tight select-none tabular-nums drop-shadow-sm">
-                {stats.totalDays}
-              </span>
-            </button>
-            <FloatingParticles ref={particlesRef} />
+        <Card className="relative overflow-visible rounded-[36px] border-0 bg-gradient-to-br from-primary/20 via-card to-amber-100/70 p-0 text-center shadow-[0_28px_90px_-46px_rgba(232,93,117,0.9)] dark:to-secondary/10">
+          <div className="absolute inset-0 overflow-hidden rounded-[inherit] pointer-events-none">
+            <div className="absolute -left-12 -top-16 h-44 w-44 rounded-full bg-white/60 blur-3xl dark:bg-white/5" />
+            <div className="absolute left-1/2 top-8 h-40 w-64 -translate-x-1/2 rounded-full bg-primary/20 blur-[55px]" />
+            <div className="absolute -right-12 bottom-0 h-44 w-44 rounded-full bg-amber-200/50 blur-3xl dark:bg-secondary/10" />
           </div>
 
-          <p className="text-sm font-bold text-foreground/80">ngày yêu thương</p>
-          <p className="mt-1 text-xs text-muted-foreground/80">Cột mốc hạnh phúc từ {formatDate(couple?.startDate)}</p>
-        </div>
-      </Card>
+          <div className="relative z-10 px-5 pb-5 pt-6">
+            <AnimatedCoupleAvatars users={users} triggerKey={comboKey} />
 
-      {/* 3. Unified Widget Stats Panel */}
-      <Card className="p-0 overflow-hidden divide-x divide-border/60 flex border-border/60 shadow-soft bg-card/70 backdrop-blur-md">
-        <div className="flex-1 py-4 text-center">
-          <p className="text-2xl font-black text-primary/90 tracking-tight">{stats.years}</p>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mt-0.5">năm</p>
-        </div>
-        <div className="flex-1 py-4 text-center">
-          <p className="text-2xl font-black text-primary/90 tracking-tight">{stats.months}</p>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mt-0.5">tháng</p>
-        </div>
-        <div className="flex-1 py-4 text-center">
-          <p className="text-2xl font-black text-primary/90 tracking-tight">{stats.days}</p>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mt-0.5">ngày</p>
-        </div>
-      </Card>
+            <div className="mx-auto mb-3 inline-flex items-center gap-1.5 rounded-full bg-white/60 px-3 py-1 text-xs font-bold text-primary shadow-[0_12px_34px_-28px_rgba(232,93,117,0.9)] backdrop-blur-md dark:bg-card/65">
+              <Sparkles className="h-3.5 w-3.5 fill-current" />
+              Nhật ký yêu thương
+            </div>
 
-      {/* 4. Refined Elegant Quote Card */}
-      <Card className="relative p-5 border-primary/5 bg-primary/5 dark:bg-primary/5/10 overflow-hidden">
-        <div className="absolute -right-2 -bottom-2 opacity-5 text-primary">
-          <Quote className="h-24 w-24 fill-current rotate-180" />
-        </div>
-        <div className="mb-2 flex items-center gap-1.5 text-primary/95 font-semibold text-xs uppercase tracking-wider">
-          <Sparkles className="h-4 w-4 fill-current" />
-          <span>Quote hôm nay</span>
-        </div>
-        <p className="text-base font-serif italic leading-relaxed text-foreground/90 pl-1">
-          “{getDailyQuote(QUOTES)}”
-        </p>
-      </Card>
+            <div className="relative my-1 flex justify-center">
+              <button
+                type="button"
+                onClick={triggerTapCombo}
+                className="group relative inline-flex min-h-[96px] min-w-[168px] items-center justify-center rounded-full bg-white/70 px-9 py-2 shadow-[inset_0_2px_10px_rgba(255,255,255,0.65),0_18px_45px_-28px_rgba(232,93,117,0.95)] backdrop-blur-md transition-all duration-300 active:scale-[0.96] dark:bg-card/70"
+                aria-label="Tạo hiệu ứng"
+              >
+                <span className="font-serif text-[72px] font-extrabold leading-none tracking-tight text-primary drop-shadow-sm select-none tabular-nums">
+                  {stats.totalDays}
+                </span>
+              </button>
+              <FloatingParticles ref={particlesRef} />
+            </div>
 
-      {/* 5. Quick Actions Grid (Intimate Actions Shortcuts) */}
-      <div className="space-y-2">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80 pl-1">Thao tác nhanh cùng người yêu</p>
-        <div className="grid grid-cols-3 gap-3">
-          <Link href="/notes" className="flex flex-col items-center justify-center p-3 rounded-2xl bg-card border border-border/80 shadow-soft active:scale-[0.97] transition-all group hover:border-primary/20">
-            <div className="h-10 w-10 rounded-xl bg-primary/8 flex items-center justify-center text-primary group-hover:scale-105 transition duration-300">
+            <p className="mt-2 text-sm font-bold text-foreground/85">ngày tụi mình ở bên nhau</p>
+            <p className="mt-1 text-xs text-muted-foreground/85">Từ {formatDate(couple?.startDate)} đến hôm nay vẫn thương.</p>
+
+            <div className="mt-5 grid grid-cols-3 gap-2">
+              <div className="rounded-[22px] bg-white/55 px-2 py-3 shadow-[0_12px_32px_-28px_rgba(232,93,117,0.9)] backdrop-blur-md dark:bg-card/55">
+                <p className="text-2xl font-black text-primary/90 tracking-tight">{stats.years}</p>
+                <p className="mt-0.5 text-[11px] font-semibold text-muted-foreground">năm</p>
+              </div>
+              <div className="rounded-[22px] bg-white/55 px-2 py-3 shadow-[0_12px_32px_-28px_rgba(232,93,117,0.9)] backdrop-blur-md dark:bg-card/55">
+                <p className="text-2xl font-black text-primary/90 tracking-tight">{stats.months}</p>
+                <p className="mt-0.5 text-[11px] font-semibold text-muted-foreground">tháng</p>
+              </div>
+              <div className="rounded-[22px] bg-white/55 px-2 py-3 shadow-[0_12px_32px_-28px_rgba(232,93,117,0.9)] backdrop-blur-md dark:bg-card/55">
+                <p className="text-2xl font-black text-primary/90 tracking-tight">{stats.days}</p>
+                <p className="mt-0.5 text-[11px] font-semibold text-muted-foreground">ngày</p>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="relative overflow-hidden rounded-[32px] border-0 bg-gradient-to-br from-rose-100/70 via-card to-amber-50/90 p-5 shadow-[0_22px_70px_-48px_rgba(232,93,117,0.85)] dark:from-primary/15 dark:to-secondary/10">
+          <div className="absolute -right-4 -bottom-4 text-primary/10">
+            <Quote className="h-28 w-28 fill-current rotate-180" />
+          </div>
+          <div className="relative z-10 mb-3 inline-flex items-center gap-1.5 rounded-full bg-white/65 px-3 py-1 text-xs font-bold text-primary shadow-[0_10px_26px_-22px_rgba(232,93,117,0.8)] backdrop-blur-md dark:bg-card/60">
+            <Sparkles className="h-3.5 w-3.5 fill-current" />
+            Lời nhắn hôm nay
+          </div>
+          <p className="relative z-10 pl-1 font-serif text-lg italic leading-relaxed text-foreground/90">
+            “{getDailyQuote(QUOTES)}”
+          </p>
+        </Card>
+
+        <div className="space-y-3">
+          <div className="px-1">
+            <p className="text-sm font-black text-foreground/90">Làm gì đó cho người yêu nè</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">Nhanh, nhẹ, không giống mấy cái nút web nữa.</p>
+          </div>
+
+          <Link href="/notes" className="group flex min-h-16 items-center gap-3 rounded-[28px] bg-gradient-to-r from-card via-rose-50/80 to-primary/10 p-4 shadow-[0_20px_60px_-46px_rgba(88,39,52,0.55)] transition-all active:scale-[0.98] dark:via-card dark:to-primary/15">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[20px] bg-primary text-primary-foreground shadow-[0_14px_34px_-22px_rgba(232,93,117,0.9)] transition-transform duration-300 group-active:scale-95">
               <Send className="h-5 w-5" />
             </div>
-            <span className="text-xs font-semibold text-foreground/90 mt-2">Gửi Note</span>
+            <div className="min-w-0 flex-1">
+              <p className="font-bold text-foreground/95">Gửi một note</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">Viết vài dòng làm người kia cười.</p>
+            </div>
           </Link>
-          <Link href="/ting-ting" className="flex flex-col items-center justify-center p-3 rounded-2xl bg-card border border-border/80 shadow-soft active:scale-[0.97] transition-all group hover:border-primary/20">
-            <div className="h-10 w-10 rounded-xl bg-primary/8 flex items-center justify-center text-primary group-hover:scale-105 transition duration-300">
+
+          <Link href="/ting-ting" className="group flex min-h-16 items-center gap-3 rounded-[28px] bg-gradient-to-r from-card via-amber-50/80 to-accent/30 p-4 shadow-[0_20px_60px_-46px_rgba(88,39,52,0.55)] transition-all active:scale-[0.98] dark:via-card dark:to-accent/10">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[20px] bg-accent text-accent-foreground shadow-[0_14px_34px_-22px_rgba(251,146,60,0.75)] transition-transform duration-300 group-active:scale-95">
               <BellRing className="h-5 w-5" />
             </div>
-            <span className="text-xs font-semibold text-foreground/90 mt-2">Bấm Ting</span>
+            <div className="min-w-0 flex-1">
+              <p className="font-bold text-foreground/95">Bấm ting ting</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">Gọi nhẹ một cái để được nhớ tới.</p>
+            </div>
           </Link>
-          <Link href="/gallery" className="flex flex-col items-center justify-center p-3 rounded-2xl bg-card border border-border/80 shadow-soft active:scale-[0.97] transition-all group hover:border-primary/20">
-            <div className="h-10 w-10 rounded-xl bg-primary/8 flex items-center justify-center text-primary group-hover:scale-105 transition duration-300">
+
+          <Link href="/gallery" className="group flex min-h-16 items-center gap-3 rounded-[28px] bg-gradient-to-r from-card via-pink-50/80 to-secondary/10 p-4 shadow-[0_20px_60px_-46px_rgba(88,39,52,0.55)] transition-all active:scale-[0.98] dark:via-card dark:to-secondary/15">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[20px] bg-secondary text-secondary-foreground shadow-[0_14px_34px_-22px_rgba(124,58,237,0.7)] transition-transform duration-300 group-active:scale-95">
               <ImagePlus className="h-5 w-5" />
             </div>
-            <span className="text-xs font-semibold text-foreground/90 mt-2">Đăng ảnh</span>
+            <div className="min-w-0 flex-1">
+              <p className="font-bold text-foreground/95">Thêm ảnh kỷ niệm</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">Cất một khoảnh khắc vào album chung.</p>
+            </div>
           </Link>
         </div>
       </div>
