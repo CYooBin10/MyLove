@@ -46,9 +46,9 @@ export function AnimatedCoupleAvatars({ users, triggerKey = 0 }: Props) {
 
   const triggerCuddle = () => {
     if (reducedMotion) return;
-    cuddleUntil.current = Date.now() + 450;
+    cuddleUntil.current = Date.now() + 500;
     setPulse(true);
-    setTimeout(() => setPulse(false), 450);
+    setTimeout(() => setPulse(false), 500);
   };
 
   useEffect(() => {
@@ -61,33 +61,40 @@ export function AnimatedCoupleAvatars({ users, triggerKey = 0 }: Props) {
       const t = now / 1000;
       const isCuddling = now < cuddleUntil.current;
 
-      // Smooth interpolation for pointer parallax
-      pointerCurrent.current.x += (pointerTarget.current.x - pointerCurrent.current.x) * 0.12;
-      pointerCurrent.current.y += (pointerTarget.current.y - pointerCurrent.current.y) * 0.12;
+      // Smooth interpolation for pointer parallax (smaller dampening factor = smoother slide)
+      pointerCurrent.current.x += (pointerTarget.current.x - pointerCurrent.current.x) * 0.08;
+      pointerCurrent.current.y += (pointerTarget.current.y - pointerCurrent.current.y) * 0.08;
 
       const nextPoses = [0, 1].map((i) => {
-        const side = i === 0 ? -1 : 1;
+        const side = i === 0 ? -1 : 1; // Left is -1, Right is 1
 
-        // 1. Idle float (slow wave)
-        const floatY = Math.sin(t * 1.5 + i * 1.7) * 3;
+        // 1. Idle float (slow wave offset for a living feel)
+        const floatY = Math.sin(t * 1.8 + i * 1.8) * 4;
+        const floatX = Math.cos(t * 1.2 + i * 1.5) * 2;
 
         // 2. Parallax drift (X shifts inward/outward, Y shifts based on pointer)
-        const parallaxX = pointerCurrent.current.x * side * -4;
-        const parallaxY = pointerCurrent.current.y * 3;
+        const parallaxX = pointerCurrent.current.x * side * -6;
+        const parallaxY = pointerCurrent.current.y * 5;
 
-        // 3. Cuddle shift (inward scale pulse)
-        const cuddleX = isCuddling ? side * 8 : 0;
-        const cuddleY = isCuddling ? -2 : 0;
-        const cuddleScale = isCuddling ? 0.08 : 0;
+        // 3. Cuddle shift: INWARD (Left avatar moves Right (x increases), Right avatar moves Left (x decreases))
+        // So cuddleX should move opposite to side: left (side -1) gets +14px, right (side 1) gets -14px
+        const cuddleX = isCuddling ? side * -14 : 0;
+        const cuddleY = isCuddling ? 4 : 0;
+        const cuddleScale = isCuddling ? 0.12 : 0;
 
         // 4. Subtle breathing scale
-        const breathingScale = Math.sin(t * 2 + i) * 0.015;
+        const breathingScale = Math.sin(t * 2.2 + i * Math.PI) * 0.012;
 
-        // Computed values
-        const x = parallaxX + cuddleX;
+        // Computed positions
+        const x = floatX + parallaxX + cuddleX;
         const y = floatY + parallaxY + cuddleY;
         const scale = 1 + breathingScale + cuddleScale;
-        const rotate = side * 1.5 + pointerCurrent.current.x * side * -2 + (isCuddling ? side * -4 : 0);
+
+        // Rotate: Left (side -1) tilts clockwise/right (e.g. +6deg), Right (side 1) tilts counter-clockwise/left (e.g. -6deg)
+        // This tilts them inward towards each other during cuddle/pulse
+        const baseRotate = side * 2; // subtle default tilt apart
+        const cuddleRotate = isCuddling ? side * -10 : 0; // tilt towards each other
+        const rotate = baseRotate + pointerCurrent.current.x * side * -3 + cuddleRotate;
 
         return { x, y, scale, rotate };
       });
@@ -116,13 +123,14 @@ export function AnimatedCoupleAvatars({ users, triggerKey = 0 }: Props) {
 
   const visibleUsers = users.slice(0, 2);
 
-  // Return static overlap if reduced motion or zero users
   if (visibleUsers.length === 0) return null;
+
+  // Static fallback if reduced motion
   if (reducedMotion) {
     return (
-      <div className="mb-4 flex justify-center -space-x-3 select-none">
+      <div className="mb-4 flex justify-center -space-x-4 select-none">
         {visibleUsers.map((user) => (
-          <Avatar key={user.id} src={user.avatarUrl} name={user.name} size="lg" className="ring-4 ring-card" />
+          <Avatar key={user.id} src={user.avatarUrl} name={user.name} size="xl" className="ring-4 ring-card" />
         ))}
       </div>
     );
@@ -134,8 +142,17 @@ export function AnimatedCoupleAvatars({ users, triggerKey = 0 }: Props) {
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
       onClick={triggerCuddle}
-      className="mb-4 flex h-20 items-center justify-center relative touch-none cursor-pointer select-none"
+      className="mb-4 flex h-32 items-center justify-center relative touch-none cursor-pointer select-none overflow-visible"
     >
+      {/* Dynamic heart halo backdrop during combo/cuddle */}
+      <div
+        className={`absolute inset-0 flex items-center justify-center pointer-events-none transition-all duration-500 scale-75 opacity-0 ${
+          pulse ? "scale-110 opacity-30" : ""
+        }`}
+      >
+        <div className="h-28 w-28 rounded-full bg-primary/20 blur-xl" />
+      </div>
+
       {visibleUsers.map((user, i) => {
         const pose = poses[i] || { x: 0, y: 0, scale: 1, rotate: 0 };
         const isLeft = i === 0;
@@ -145,21 +162,28 @@ export function AnimatedCoupleAvatars({ users, triggerKey = 0 }: Props) {
             key={user.id}
             className="absolute transition-shadow duration-300"
             style={{
-              left: isLeft ? "calc(50% - 62px)" : "calc(50% - 2px)",
+              // Centers around middle. h-24 is 96px. Gap between centers is 76px.
+              // Left center = 50% - 38px - 48px offset = 50% - 86px.
+              // Right center = 50% + 38px - 48px offset = 50% - 10px.
+              left: isLeft ? "calc(50% - 94px)" : "calc(50% - 2px)",
               zIndex: isLeft ? 10 : 20,
               transform: `translate3d(${pose.x}px, ${pose.y}px, 0) scale(${pose.scale}) rotate(${pose.rotate}deg)`,
+              willChange: "transform",
             }}
           >
-            <Avatar
-              src={user.avatarUrl}
-              name={user.name}
-              size="lg"
-              className={`ring-4 ring-card transition-shadow ${
-                pulse
-                  ? "shadow-[0_0_20px_rgba(232,93,117,0.4)] border-primary/20"
-                  : ""
-              }`}
-            />
+            {/* Custom sizing override inside Container for large w-24 h-24 avatars */}
+            <div className="relative rounded-full">
+              <Avatar
+                src={user.avatarUrl}
+                name={user.name}
+                size="xl"
+                className={`ring-4 ring-card transition-all duration-300 w-24 h-24 border-border/60 ${
+                  pulse
+                    ? "ring-primary/20 shadow-[0_0_24px_rgba(232,93,117,0.5)] border-primary/40 scale-105"
+                    : "shadow-soft"
+                }`}
+              />
+            </div>
           </div>
         );
       })}
