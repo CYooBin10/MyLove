@@ -50,10 +50,12 @@ export default function HomePage() {
       </div>
 
       {/* 2. Premium Glow Hero Card */}
-      <Card className="relative overflow-hidden p-6 text-center border-primary/10 shadow-soft bg-gradient-to-b from-card to-background/50">
+      <Card className="relative overflow-visible p-6 text-center border-primary/10 shadow-soft bg-gradient-to-b from-card to-background/50">
         {/* Glow Effects */}
-        <div className="pointer-events-none absolute left-1/2 top-0 h-48 w-72 -translate-x-1/2 rounded-full bg-primary/10 blur-[50px] dark:bg-primary/5" />
-        <div className="pointer-events-none absolute right-4 top-4 h-12 w-12 rounded-full bg-amber-400/5 blur-xl" />
+        <div className="absolute inset-0 overflow-hidden rounded-[inherit] pointer-events-none">
+          <div className="absolute left-1/2 top-0 h-48 w-72 -translate-x-1/2 rounded-full bg-primary/10 blur-[50px] dark:bg-primary/5" />
+          <div className="absolute right-4 top-4 h-12 w-12 rounded-full bg-amber-400/5 blur-xl" />
+        </div>
 
         <div className="relative z-10">
           {/* Avatar Interaction duo */}
@@ -61,7 +63,7 @@ export default function HomePage() {
 
           <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted-foreground/80 mt-2">Chúng ta đã thương nhau</p>
 
-          <div className="my-2 flex justify-center">
+          <div className="my-2 flex justify-center relative">
             <button
               type="button"
               onClick={triggerTapCombo}
@@ -71,8 +73,8 @@ export default function HomePage() {
               <span className="font-serif text-[72px] font-extrabold leading-none text-primary tracking-tight select-none tabular-nums drop-shadow-sm">
                 {stats.totalDays}
               </span>
-              <FloatingParticles ref={particlesRef} />
             </button>
+            <FloatingParticles ref={particlesRef} />
           </div>
 
           <p className="text-sm font-bold text-foreground/80">ngày yêu thương</p>

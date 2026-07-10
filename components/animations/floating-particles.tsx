@@ -37,14 +37,14 @@ export const FloatingParticles = forwardRef<FloatingParticlesRef, {}>((_, ref) =
     const count = animationPack === "sparkles" ? 10 : 6;
     const newParticles: Particle[] = Array.from({ length: count }).map((_, i) => {
       const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
-      const distance = 40 + Math.random() * 50;
+      const distance = animationPack === "sparkles" ? 60 + Math.random() * 100 : 50 + Math.random() * 70;
 
       return {
         id: Date.now() + i + Math.random(),
         x: 40 + Math.random() * 20, // Centered spawn (40% - 60%)
         scale: 0.7 + Math.random() * 0.5,
         tx: Math.cos(angle) * distance,
-        ty: -60 - Math.random() * 80,
+        ty: animationPack === "sparkles" ? -85 - Math.random() * 120 : -75 - Math.random() * 110,
         rot: (Math.random() - 0.5) * 90,
         sway: (Math.random() - 0.5) * 40,
       };
@@ -67,7 +67,7 @@ export const FloatingParticles = forwardRef<FloatingParticlesRef, {}>((_, ref) =
   if (animationPack === "none" || reducedMotion || particles.length === 0) return null;
 
   return (
-    <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
+    <div className="pointer-events-none absolute inset-0 z-20 overflow-visible">
       {particles.map((p) => {
         let IconComponent: any = Heart;
         let colorClass = "text-primary fill-primary";

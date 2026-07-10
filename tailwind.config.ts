@@ -27,7 +27,7 @@ const config: Config = {
         floatHeart: {
           "0%": { transform: "translateY(0) scale(.8)", opacity: "0" },
           "15%": { opacity: "1" },
-          "100%": { transform: "translateY(-140px) scale(1.2) rotate(var(--rot, 0deg))", opacity: "0" }
+          "100%": { transform: "translateY(-280px) scale(1.2) rotate(var(--rot, 0deg))", opacity: "0" }
         },
         burstSparkle: {
           "0%": { transform: "translate(0, 0) scale(0)", opacity: "0" },
@@ -37,8 +37,8 @@ const config: Config = {
         driftBlossom: {
           "0%": { transform: "translateY(0) translateX(0) scale(0.8) rotate(0deg)", opacity: "0" },
           "15%": { opacity: "1" },
-          "50%": { transform: "translateY(-60px) translateX(var(--sway, 20px)) scale(1.1) rotate(45deg)" },
-          "100%": { transform: "translateY(-140px) translateX(calc(var(--sway, 20px) * -1)) scale(0.9) rotate(90deg)", opacity: "0" }
+          "50%": { transform: "translateY(-100px) translateX(var(--sway, 20px)) scale(1.1) rotate(45deg)" },
+          "100%": { transform: "translateY(-260px) translateX(calc(var(--sway, 20px) * -1)) scale(0.9) rotate(90deg)", opacity: "0" }
         },
         shimmer: { "100%": { transform: "translateX(100%)" } },
       },
