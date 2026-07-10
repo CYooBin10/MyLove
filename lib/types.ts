@@ -28,4 +28,7 @@ export type SessionResponse = {
   user?: SafeUser;
   couple?: CoupleBundle;
   unread?: { tingTing: number; notes: number };
+  mobile?: {
+    nativeApp: boolean;
+  };
 };

@@ -6,6 +6,7 @@ import { SHELL_POLL_SECONDS } from "@/lib/constants";
 import type { SessionResponse } from "@/lib/types";
 import { apiFetch } from "@/lib/client-api";
 import { ToastProvider } from "@/components/ui/toast";
+import { MobileBridgeBootstrap } from "@/components/providers/mobile-bridge-bootstrap";
 
 type SessionContextValue = {
   session: SessionResponse;
@@ -88,7 +89,10 @@ export function AppProviders({ initialSession, children }: { initialSession: Ses
 
   return (
     <ToastProvider>
-      <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
+      <SessionContext.Provider value={value}>
+        <MobileBridgeBootstrap session={session} />
+        {children}
+      </SessionContext.Provider>
     </ToastProvider>
   );
 }

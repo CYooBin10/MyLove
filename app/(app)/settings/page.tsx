@@ -12,6 +12,7 @@ import { Dialog } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/toast";
 import { useSessionState } from "@/components/providers/app-providers";
 import { apiFetch } from "@/lib/client-api";
+import { mobileBridge } from "@/lib/mobile/webview-bridge";
 
 const ANIMATION_PACKS = [
   { id: "hearts", label: "Thả tim" },
@@ -90,7 +91,17 @@ export default function SettingsPage() {
 
   const handleLogout = async () => {
     try {
-      await apiFetch("/api/auth/logout", { method: "POST" });
+      const token = mobileBridge?.isNativeApp() ? await mobileBridge.getPushToken() : null;
+      if (token?.deviceId) {
+        await apiFetch("/api/mobile/push-tokens/deactivate", {
+          method: "POST",
+          body: JSON.stringify({ deviceId: token.deviceId, token: token.token, reason: "logout" }),
+        });
+      }
+      await apiFetch("/api/auth/logout", {
+        method: "POST",
+        headers: token?.deviceId ? { "x-device-id": token.deviceId } : undefined,
+      });
       toast.push("Đã đăng xuất.");
       await refreshSession();
       router.replace("/");

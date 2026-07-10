@@ -7,6 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum PushTokenStatus {
+  active
+  inactive
+}
+
+enum PermissionStatus {
+  unknown
+  granted
+  denied
+  blocked
+  unavailable
+}
+
 model Couple {
   id           String        @id @default(cuid())
   displayName  String
@@ -48,6 +61,7 @@ model User {
   notes          LoveNote[]
   gallery        GalleryImage[]
   memories       Memory[]
+  pushDevices    PushDevice[]
 
   @@unique([coupleId, slot])
 }
@@ -141,4 +155,43 @@ model Settings {
   updatedAt      DateTime @updatedAt
 
   couple         Couple   @relation(fields: [coupleId], references: [id], onDelete: Cascade)
+}
+
+model PushDevice {
+  id               String           @id @default(cuid())
+  userId           String
+  provider         String           @default("fcm")
+  platform         String
+  deviceId         String
+  token            String           @unique
+  status           PushTokenStatus  @default(active)
+  permissionStatus PermissionStatus @default(unknown)
+  appVersion       String?
+  lastSeenAt       DateTime         @default(now())
+  tokenUpdatedAt   DateTime         @default(now())
+  lastSentAt       DateTime?
+  lastErrorCode    String?
+  deactivatedAt    DateTime?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, deviceId, provider])
+  @@index([userId, status])
+  @@index([status, platform])
+  @@index([lastSeenAt])
+}
+
+model WebhookEventReceipt {
+  id          String    @id @default(cuid())
+  source      String
+  eventId     String
+  eventType   String
+  status      String
+  payloadHash String?
+  receivedAt  DateTime  @default(now())
+  processedAt DateTime?
+
+  @@unique([source, eventId])
 }
