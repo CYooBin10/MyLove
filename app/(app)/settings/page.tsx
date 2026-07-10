@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Shield, Sparkles, Moon, Sun, Download, Trash2, LogOut, Info } from "lucide-react";
+import { Shield, Sparkles, Moon, Sun, Download, Trash2, LogOut, Info, Heart } from "lucide-react";
 import { ScreenContainer } from "@/components/shell/screen-container";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,8 +13,15 @@ import { useToast } from "@/components/ui/toast";
 import { useSessionState } from "@/components/providers/app-providers";
 import { apiFetch } from "@/lib/client-api";
 
+const ANIMATION_PACKS = [
+  { id: "hearts", label: "Thả tim" },
+  { id: "sparkles", label: "Lấp lánh" },
+  { id: "blossom", label: "Hoa đào" },
+  { id: "none", label: "Tắt" },
+] as const;
+
 export default function SettingsPage() {
-  const { session, refreshSession, theme, setTheme } = useSessionState();
+  const { session, refreshSession, theme, setTheme, animationPack, setAnimationPack } = useSessionState();
   const router = useRouter();
   const toast = useToast();
 
@@ -109,9 +116,20 @@ export default function SettingsPage() {
           <Button variant={theme === "dark" ? "primary" : "secondary"} size="sm" onClick={() => setTheme("dark")} className="flex items-center gap-1">
             <Moon className="h-4 w-4" /> Tối
           </Button>
-          <Button variant={theme === "system" ? "primary" : "secondary"} size="sm" onClick={() => setTheme("system")}>
-            Hệ thống
-          </Button>
+          <Button variant={theme === "system" ? "primary" : "secondary"} size="sm" onClick={() => setTheme("system")}>Hệ thống</Button>
+        </div>
+      </Card>
+
+      <Card className="p-5">
+        <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-1.5">
+          <Heart className="h-4 w-4" /> Hiệu ứng Home
+        </h3>
+        <div className="grid grid-cols-2 gap-2">
+          {ANIMATION_PACKS.map((pack) => (
+            <Button key={pack.id} variant={animationPack === pack.id ? "primary" : "secondary"} size="sm" onClick={() => setAnimationPack(pack.id)}>
+              {pack.label}
+            </Button>
+          ))}
         </div>
       </Card>
 
@@ -120,26 +138,8 @@ export default function SettingsPage() {
           <Shield className="h-4 w-4" /> Bảo mật & Tài khoản
         </h3>
         <div className="flex flex-col gap-2">
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setPwdTarget("user");
-              setPasswordOpen(true);
-            }}
-            className="justify-start font-semibold"
-          >
-            Đổi mật khẩu cá nhân
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setPwdTarget("couple");
-              setPasswordOpen(true);
-            }}
-            className="justify-start font-semibold"
-          >
-            Đổi mã cặp đôi chung
-          </Button>
+          <Button variant="secondary" onClick={() => { setPwdTarget("user"); setPasswordOpen(true); }} className="justify-start font-semibold">Đổi mật khẩu cá nhân</Button>
+          <Button variant="secondary" onClick={() => { setPwdTarget("couple"); setPasswordOpen(true); }} className="justify-start font-semibold">Đổi mã cặp đôi chung</Button>
         </div>
       </Card>
 
@@ -148,25 +148,16 @@ export default function SettingsPage() {
           <Download className="h-4 w-4" /> Dữ liệu & Hệ thống
         </h3>
         <div className="flex flex-col gap-2">
-          <Button variant="secondary" onClick={handleExport} className="justify-start font-semibold">
-            Xuất dữ liệu dự phòng (JSON)
-          </Button>
-          <Button variant="danger" onClick={() => setDeleteOpen(true)} className="justify-start font-semibold">
-            Xóa vĩnh viễn dữ liệu app
-          </Button>
+          <Button variant="secondary" onClick={handleExport} className="justify-start font-semibold">Xuất dữ liệu dự phòng (JSON)</Button>
+          <Button variant="danger" onClick={() => setDeleteOpen(true)} className="justify-start font-semibold">Xóa vĩnh viễn dữ liệu app</Button>
         </div>
       </Card>
 
       <div className="flex flex-col gap-2 pt-2">
-        <Button variant="secondary" onClick={() => setAboutOpen(true)} className="flex items-center gap-2 justify-center">
-          <Info className="h-5 w-5" /> Về ứng dụng MyLove
-        </Button>
-        <Button variant="ghost" onClick={handleLogout} className="flex items-center gap-2 text-destructive hover:bg-destructive/6 justify-center">
-          <LogOut className="h-5 w-5" /> Đăng xuất khỏi app
-        </Button>
+        <Button variant="secondary" onClick={() => setAboutOpen(true)} className="flex items-center gap-2 justify-center"><Info className="h-5 w-5" /> Về ứng dụng MyLove</Button>
+        <Button variant="ghost" onClick={handleLogout} className="flex items-center gap-2 text-destructive hover:bg-destructive/6 justify-center"><LogOut className="h-5 w-5" /> Đăng xuất khỏi app</Button>
       </div>
 
-      {/* Password Edit Sheet */}
       <BottomSheet isOpen={passwordOpen} onClose={() => setPasswordOpen(false)} title={pwdTarget === "couple" ? "Đổi mã cặp đôi chung" : "Đổi mật khẩu cá nhân"}>
         <form onSubmit={handlePasswordChange} className="space-y-4">
           <div>
@@ -177,45 +168,29 @@ export default function SettingsPage() {
             <label className="mb-1 block text-xs font-semibold text-muted-foreground">Mật khẩu mới</label>
             <Input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
           </div>
-          <Button type="submit" loading={loading} className="w-full">
-            Lưu mật khẩu mới
-          </Button>
+          <Button type="submit" loading={loading} className="w-full">Lưu mật khẩu mới</Button>
         </form>
       </BottomSheet>
 
-      {/* Delete confirmation dialog */}
       <Dialog isOpen={deleteOpen} onClose={() => setDeleteOpen(false)} title="Xác nhận xóa toàn bộ dữ liệu?">
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          Hành động này sẽ xóa vĩnh viễn tài khoản cặp đôi của bạn, mọi kỷ niệm, hình ảnh trên Vercel Blob và dữ liệu liên quan. Hành động không thể hoàn tác!
-        </p>
+        <p className="text-sm text-muted-foreground leading-relaxed">Hành động này sẽ xóa vĩnh viễn tài khoản cặp đôi của bạn, mọi kỷ niệm, hình ảnh trên Vercel Blob và dữ liệu liên quan. Hành động không thể hoàn tác!</p>
         <div className="flex gap-3 mt-5">
-          <Button variant="ghost" onClick={() => setDeleteOpen(false)} className="flex-1">
-            Hủy bỏ
-          </Button>
-          <Button variant="danger" loading={loading} onClick={handleDeleteAll} className="flex-1">
-            Xóa vĩnh viễn
-          </Button>
+          <Button variant="ghost" onClick={() => setDeleteOpen(false)} className="flex-1">Hủy bỏ</Button>
+          <Button variant="danger" loading={loading} onClick={handleDeleteAll} className="flex-1">Xóa vĩnh viễn</Button>
         </div>
       </Dialog>
 
-      {/* About Application Dialog */}
       <Dialog isOpen={aboutOpen} onClose={() => setAboutOpen(false)} title="Về ứng dụng MyLove">
         <div className="text-sm text-foreground/90 space-y-3 leading-relaxed">
-          <p>
-            <strong>MyLove</strong> là không gian riêng tư được thiết kế dưới dạng ứng dụng mobile dành riêng cho hai người.
-          </p>
-          <p>
-            Ứng dụng hỗ trợ lưu trữ kỷ niệm, gửi ting ting ngắn, chia sẻ lời nhắn yêu thương, đếm ngày yêu và countdown sự kiện quan trọng.
-          </p>
+          <p><strong>MyLove</strong> là không gian riêng tư được thiết kế dưới dạng ứng dụng mobile dành riêng cho hai người.</p>
+          <p>Ứng dụng hỗ trợ lưu trữ kỷ niệm, gửi ting ting ngắn, chia sẻ lời nhắn yêu thương, đếm ngày yêu và countdown sự kiện quan trọng.</p>
           <div className="border-t pt-3 flex flex-col gap-1 text-[11px] text-muted-foreground">
             <span>Phiên bản: 1.0.0 (Greenfield App)</span>
             <span>Công nghệ: Next.js + Tailwind + Prisma + Vercel</span>
             <span>Made with love ♥</span>
           </div>
         </div>
-        <Button variant="secondary" onClick={() => setAboutOpen(false)} className="w-full mt-5">
-          Đóng
-        </Button>
+        <Button variant="secondary" onClick={() => setAboutOpen(false)} className="w-full mt-5">Đóng</Button>
       </Dialog>
     </ScreenContainer>
   );

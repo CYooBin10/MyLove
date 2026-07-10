@@ -12,6 +12,8 @@ type SessionContextValue = {
   refreshSession: () => Promise<void>;
   theme: string;
   setTheme: (value: string) => void;
+  animationPack: string;
+  setAnimationPack: (value: string) => void;
 };
 
 const SessionContext = createContext<SessionContextValue | null>(null);
@@ -29,6 +31,7 @@ function applyTheme(value: string) {
 export function AppProviders({ initialSession, children }: { initialSession: SessionResponse; children: ReactNode }) {
   const [session, setSession] = useState(initialSession);
   const [theme, setThemeState] = useState(initialSession.couple?.settings?.theme || "system");
+  const [animationPack, setAnimationPackState] = useState<string>("hearts");
   const timer = useRef<number | null>(null);
 
   const refreshSession = useCallback(async () => {
@@ -49,11 +52,21 @@ export function AppProviders({ initialSession, children }: { initialSession: Ses
     }
   }, []);
 
+  const setAnimationPack = useCallback((value: string) => {
+    setAnimationPackState(value);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("mylove-animation-pack", value);
+    }
+  }, []);
+
   useEffect(() => {
-    const stored = window.localStorage.getItem("mylove-theme");
-    const initial = stored || theme;
-    applyTheme(initial);
-    if (stored && stored !== theme) setThemeState(stored);
+    const storedTheme = window.localStorage.getItem("mylove-theme");
+    const initialTheme = storedTheme || theme;
+    applyTheme(initialTheme);
+    if (storedTheme && storedTheme !== theme) setThemeState(storedTheme);
+
+    const storedAnim = window.localStorage.getItem("mylove-animation-pack");
+    if (storedAnim) setAnimationPackState(storedAnim);
   }, [theme]);
 
   useEffect(() => {
@@ -64,7 +77,14 @@ export function AppProviders({ initialSession, children }: { initialSession: Ses
     };
   }, [refreshSession]);
 
-  const value = useMemo(() => ({ session, refreshSession, theme, setTheme }), [session, refreshSession, theme, setTheme]);
+  const value = useMemo(() => ({
+    session,
+    refreshSession,
+    theme,
+    setTheme,
+    animationPack,
+    setAnimationPack
+  }), [session, refreshSession, theme, setTheme, animationPack, setAnimationPack]);
 
   return (
     <ToastProvider>

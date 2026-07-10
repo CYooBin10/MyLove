@@ -24,10 +24,32 @@ const config: Config = {
       keyframes: {
         sheetUp: { from: { transform: "translateY(100%)" }, to: { transform: "translateY(0)" } },
         fadeIn: { from: { opacity: "0" }, to: { opacity: "1" } },
-        floatHeart: { "0%": { transform: "translateY(0) scale(.8)", opacity: "0" }, "15%": { opacity: "1" }, "100%": { transform: "translateY(-120px) scale(1.2)", opacity: "0" } },
+        floatHeart: {
+          "0%": { transform: "translateY(0) scale(.8)", opacity: "0" },
+          "15%": { opacity: "1" },
+          "100%": { transform: "translateY(-140px) scale(1.2) rotate(var(--rot, 0deg))", opacity: "0" }
+        },
+        burstSparkle: {
+          "0%": { transform: "translate(0, 0) scale(0)", opacity: "0" },
+          "20%": { opacity: "1" },
+          "100%": { transform: "translate(var(--tx, 0px), var(--ty, -100px)) scale(1.2) rotate(var(--rot, 0deg))", opacity: "0" }
+        },
+        driftBlossom: {
+          "0%": { transform: "translateY(0) translateX(0) scale(0.8) rotate(0deg)", opacity: "0" },
+          "15%": { opacity: "1" },
+          "50%": { transform: "translateY(-60px) translateX(var(--sway, 20px)) scale(1.1) rotate(45deg)" },
+          "100%": { transform: "translateY(-140px) translateX(calc(var(--sway, 20px) * -1)) scale(0.9) rotate(90deg)", opacity: "0" }
+        },
         shimmer: { "100%": { transform: "translateX(100%)" } },
       },
-      animation: { sheetUp: "sheetUp 220ms cubic-bezier(.2,.8,.2,1)", fadeIn: "fadeIn 180ms ease-out", floatHeart: "floatHeart 900ms ease-out forwards", shimmer: "shimmer 1.4s infinite" },
+      animation: {
+        sheetUp: "sheetUp 220ms cubic-bezier(.2,.8,.2,1)",
+        fadeIn: "fadeIn 180ms ease-out",
+        floatHeart: "floatHeart 1000ms ease-out forwards",
+        burstSparkle: "burstSparkle 900ms cubic-bezier(.1,.8,.3,1) forwards",
+        driftBlossom: "driftBlossom 1200ms ease-in-out forwards",
+        shimmer: "shimmer 1.4s infinite"
+      },
     },
   },
   plugins: [],

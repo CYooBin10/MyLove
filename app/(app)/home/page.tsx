@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRef } from "react";
 import { Heart, Sparkles } from "lucide-react";
+import { FloatingParticles, type FloatingParticlesRef } from "@/components/animations/floating-particles";
 import { ScreenContainer } from "@/components/shell/screen-container";
 import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
@@ -14,12 +15,10 @@ export default function HomePage() {
   const couple = session.couple;
   const users = couple?.users || [];
   const stats = couple ? getRelationshipStats(couple.startDate) : { totalDays: 0, years: 0, months: 0, days: 0 };
-  const [hearts, setHearts] = useState<number[]>([]);
+  const particlesRef = useRef<FloatingParticlesRef>(null);
 
   function popHeart() {
-    const id = Date.now();
-    setHearts((current) => [...current, id]);
-    window.setTimeout(() => setHearts((current) => current.filter((h) => h !== id)), 950);
+    particlesRef.current?.trigger();
   }
 
   return (
@@ -38,14 +37,10 @@ export default function HomePage() {
             type="button"
             onClick={popHeart}
             className="relative mt-2 inline-flex items-center justify-center rounded-[32px] px-6 py-2 active:scale-[0.98] transition"
-            aria-label="Tạo hiệu ứng tim"
+            aria-label="Tạo hiệu ứng"
           >
             <span className="font-serif text-[76px] font-bold leading-none text-primary tabular-nums">{stats.totalDays}</span>
-            {hearts.map((id, index) => (
-              <span key={id} className="absolute text-primary animate-floatHeart" style={{ left: `${42 + index * 8}%` }}>
-                ♥
-              </span>
-            ))}
+            <FloatingParticles ref={particlesRef} />
           </button>
           <p className="text-base font-semibold">ngày yêu nhau</p>
           <p className="mt-2 text-sm text-muted-foreground">Từ {formatDate(couple?.startDate)}</p>
