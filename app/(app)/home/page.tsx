@@ -1,11 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Heart, Sparkles } from "lucide-react";
 import { FloatingParticles, type FloatingParticlesRef } from "@/components/animations/floating-particles";
+import { AnimatedCoupleAvatars } from "@/components/animations/animated-couple-avatars";
 import { ScreenContainer } from "@/components/shell/screen-container";
 import { Card } from "@/components/ui/card";
-import { Avatar } from "@/components/ui/avatar";
 import { useSessionState } from "@/components/providers/app-providers";
 import { QUOTES } from "@/lib/constants";
 import { formatDate, getDailyQuote, getRelationshipStats } from "@/lib/dates";
@@ -15,9 +15,12 @@ export default function HomePage() {
   const couple = session.couple;
   const users = couple?.users || [];
   const stats = couple ? getRelationshipStats(couple.startDate) : { totalDays: 0, years: 0, months: 0, days: 0 };
-  const particlesRef = useRef<FloatingParticlesRef>(null);
 
-  function popHeart() {
+  const particlesRef = useRef<FloatingParticlesRef>(null);
+  const [comboKey, setComboKey] = useState(0);
+
+  function triggerTapCombo() {
+    setComboKey((k) => k + 1);
     particlesRef.current?.trigger();
   }
 
@@ -26,16 +29,12 @@ export default function HomePage() {
       <Card className="relative overflow-hidden p-6 text-center">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,hsl(var(--primary)/0.16),transparent_55%)]" />
         <div className="relative z-10">
-          <div className="mb-4 flex justify-center -space-x-3">
-            {users.map((user) => (
-              <Avatar key={user.id} src={user.avatarUrl} name={user.name} size="lg" className="ring-4 ring-card" />
-            ))}
-          </div>
+          <AnimatedCoupleAvatars users={users} triggerKey={comboKey} />
 
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Đã bên nhau</p>
           <button
             type="button"
-            onClick={popHeart}
+            onClick={triggerTapCombo}
             className="relative mt-2 inline-flex items-center justify-center rounded-[32px] px-6 py-2 active:scale-[0.98] transition"
             aria-label="Tạo hiệu ứng"
           >
