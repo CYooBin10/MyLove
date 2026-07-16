@@ -46,6 +46,78 @@
     --input: 280 12% 22%;
     --ring: 349 85% 72%;
   }
+
+  [data-color-theme="aqua"] {
+    --background: 185 60% 97%;
+    --foreground: 190 35% 14%;
+    --card: 0 0% 100%;
+    --card-foreground: 190 35% 14%;
+    --primary: 186 72% 42%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 199 78% 56%;
+    --secondary-foreground: 190 35% 12%;
+    --muted: 185 24% 91%;
+    --muted-foreground: 190 18% 39%;
+    --accent: 168 64% 72%;
+    --accent-foreground: 190 35% 14%;
+    --border: 185 24% 86%;
+    --input: 185 24% 86%;
+    --ring: 186 72% 42%;
+  }
+
+  .dark[data-color-theme="aqua"] {
+    --background: 190 32% 8%;
+    --foreground: 180 28% 95%;
+    --card: 190 28% 12%;
+    --card-foreground: 180 28% 95%;
+    --primary: 182 70% 58%;
+    --primary-foreground: 190 32% 8%;
+    --secondary: 199 72% 68%;
+    --secondary-foreground: 190 32% 8%;
+    --muted: 190 18% 20%;
+    --muted-foreground: 185 14% 72%;
+    --accent: 168 55% 62%;
+    --accent-foreground: 190 32% 8%;
+    --border: 190 18% 23%;
+    --input: 190 18% 23%;
+    --ring: 182 70% 58%;
+  }
+
+  [data-color-theme="red"] {
+    --background: 0 55% 98%;
+    --foreground: 0 30% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 30% 15%;
+    --primary: 0 72% 52%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 16 82% 60%;
+    --secondary-foreground: 0 30% 12%;
+    --muted: 0 18% 92%;
+    --muted-foreground: 0 14% 40%;
+    --accent: 35 92% 72%;
+    --accent-foreground: 0 30% 15%;
+    --border: 0 20% 88%;
+    --input: 0 20% 88%;
+    --ring: 0 72% 52%;
+  }
+
+  .dark[data-color-theme="red"] {
+    --background: 0 24% 8%;
+    --foreground: 0 20% 95%;
+    --card: 0 22% 12%;
+    --card-foreground: 0 20% 95%;
+    --primary: 0 78% 66%;
+    --primary-foreground: 0 24% 8%;
+    --secondary: 16 75% 70%;
+    --secondary-foreground: 0 24% 8%;
+    --muted: 0 14% 20%;
+    --muted-foreground: 0 10% 72%;
+    --accent: 35 78% 68%;
+    --accent-foreground: 0 24% 8%;
+    --border: 0 14% 23%;
+    --input: 0 14% 23%;
+    --ring: 0 78% 66%;
+  }
 }
 
 @layer base {

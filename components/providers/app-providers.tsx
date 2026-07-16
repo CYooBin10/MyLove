@@ -13,6 +13,8 @@ type SessionContextValue = {
   refreshSession: () => Promise<void>;
   theme: string;
   setTheme: (value: string) => void;
+  colorTheme: "aqua" | "red";
+  setColorTheme: (value: "aqua" | "red") => void;
   animationPack: string;
   setAnimationPack: (value: string) => void;
 };
@@ -29,9 +31,14 @@ function applyTheme(value: string) {
   root.classList.toggle("dark", resolved === "dark");
 }
 
+function applyColorTheme(value: "aqua" | "red") {
+  document.documentElement.dataset.colorTheme = value;
+}
+
 export function AppProviders({ initialSession, children }: { initialSession: SessionResponse; children: ReactNode }) {
   const [session, setSession] = useState(initialSession);
   const [theme, setThemeState] = useState(initialSession.couple?.settings?.theme || "system");
+  const [colorTheme, setColorThemeState] = useState<"aqua" | "red">("red");
   const [animationPack, setAnimationPackState] = useState<string>("hearts");
   const timer = useRef<number | null>(null);
 
@@ -53,6 +60,12 @@ export function AppProviders({ initialSession, children }: { initialSession: Ses
     }
   }, []);
 
+  const setColorTheme = useCallback((value: "aqua" | "red") => {
+    setColorThemeState(value);
+    window.localStorage.setItem("mylove-color-theme", value);
+    applyColorTheme(value);
+  }, []);
+
   const setAnimationPack = useCallback((value: string) => {
     setAnimationPackState(value);
     if (typeof window !== "undefined") {
@@ -66,9 +79,14 @@ export function AppProviders({ initialSession, children }: { initialSession: Ses
     applyTheme(initialTheme);
     if (storedTheme && storedTheme !== theme) setThemeState(storedTheme);
 
+    const storedColorTheme = window.localStorage.getItem("mylove-color-theme");
+    const initialColorTheme = storedColorTheme === "aqua" || storedColorTheme === "red" ? storedColorTheme : "red";
+    applyColorTheme(initialColorTheme);
+    if (initialColorTheme !== colorTheme) setColorThemeState(initialColorTheme);
+
     const storedAnim = window.localStorage.getItem("mylove-animation-pack");
     if (storedAnim) setAnimationPackState(storedAnim);
-  }, [theme]);
+  }, [colorTheme, theme]);
 
   useEffect(() => {
     refreshSession();
@@ -83,9 +101,11 @@ export function AppProviders({ initialSession, children }: { initialSession: Ses
     refreshSession,
     theme,
     setTheme,
+    colorTheme,
+    setColorTheme,
     animationPack,
     setAnimationPack
-  }), [session, refreshSession, theme, setTheme, animationPack, setAnimationPack]);
+  }), [session, refreshSession, theme, setTheme, colorTheme, setColorTheme, animationPack, setAnimationPack]);
 
   return (
     <ToastProvider>

@@ -22,7 +22,7 @@ const ANIMATION_PACKS = [
 ] as const;
 
 export default function SettingsPage() {
-  const { session, refreshSession, theme, setTheme, animationPack, setAnimationPack } = useSessionState();
+  const { session, refreshSession, theme, setTheme, colorTheme, setColorTheme, animationPack, setAnimationPack } = useSessionState();
   const router = useRouter();
   const toast = useToast();
 
@@ -128,6 +128,10 @@ export default function SettingsPage() {
             <Moon className="h-4 w-4" /> Tối
           </Button>
           <Button variant={theme === "system" ? "primary" : "secondary"} size="sm" onClick={() => setTheme("system")}>Hệ thống</Button>
+        </div>
+        <div className="mt-4 grid grid-cols-2 gap-2">
+          <Button variant={colorTheme === "aqua" ? "primary" : "secondary"} size="sm" onClick={() => setColorTheme("aqua")}>Aqua</Button>
+          <Button variant={colorTheme === "red" ? "primary" : "secondary"} size="sm" onClick={() => setColorTheme("red")}>Đỏ</Button>
         </div>
       </Card>
 
