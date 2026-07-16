@@ -13,7 +13,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
   return (
     <html lang="vi">
-      <body className="bg-[#121212]/5 dark:bg-[#121212] md:py-8">
+      <body className="md:py-8">
         <AppProviders initialSession={initialSession}>{children}</AppProviders>
       </body>
     </html>

@@ -13,8 +13,8 @@ type SessionContextValue = {
   refreshSession: () => Promise<void>;
   theme: string;
   setTheme: (value: string) => void;
-  colorTheme: "aqua" | "red";
-  setColorTheme: (value: "aqua" | "red") => void;
+  colorTheme: "pink" | "aqua" | "red";
+  setColorTheme: (value: "pink" | "aqua" | "red") => void;
   animationPack: string;
   setAnimationPack: (value: string) => void;
 };
@@ -31,14 +31,14 @@ function applyTheme(value: string) {
   root.classList.toggle("dark", resolved === "dark");
 }
 
-function applyColorTheme(value: "aqua" | "red") {
+function applyColorTheme(value: "pink" | "aqua" | "red") {
   document.documentElement.dataset.colorTheme = value;
 }
 
 export function AppProviders({ initialSession, children }: { initialSession: SessionResponse; children: ReactNode }) {
   const [session, setSession] = useState(initialSession);
   const [theme, setThemeState] = useState(initialSession.couple?.settings?.theme || "system");
-  const [colorTheme, setColorThemeState] = useState<"aqua" | "red">("red");
+  const [colorTheme, setColorThemeState] = useState<"pink" | "aqua" | "red">("pink");
   const [animationPack, setAnimationPackState] = useState<string>("hearts");
   const timer = useRef<number | null>(null);
 
@@ -60,7 +60,7 @@ export function AppProviders({ initialSession, children }: { initialSession: Ses
     }
   }, []);
 
-  const setColorTheme = useCallback((value: "aqua" | "red") => {
+  const setColorTheme = useCallback((value: "pink" | "aqua" | "red") => {
     setColorThemeState(value);
     window.localStorage.setItem("mylove-color-theme", value);
     applyColorTheme(value);
@@ -80,7 +80,7 @@ export function AppProviders({ initialSession, children }: { initialSession: Ses
     if (storedTheme && storedTheme !== theme) setThemeState(storedTheme);
 
     const storedColorTheme = window.localStorage.getItem("mylove-color-theme");
-    const initialColorTheme = storedColorTheme === "aqua" || storedColorTheme === "red" ? storedColorTheme : "red";
+    const initialColorTheme = storedColorTheme === "pink" || storedColorTheme === "aqua" || storedColorTheme === "red" ? storedColorTheme : "pink";
     applyColorTheme(initialColorTheme);
     if (initialColorTheme !== colorTheme) setColorThemeState(initialColorTheme);
 

@@ -19,7 +19,7 @@ const config: Config = {
         card: { DEFAULT: "hsl(var(--card))", foreground: "hsl(var(--card-foreground))" },
       },
       borderRadius: { xl: "var(--radius-xl)", lg: "var(--radius-lg)", md: "var(--radius-md)" },
-      boxShadow: { soft: "0 10px 30px -18px rgb(88 39 52 / 0.35)", sheet: "0 -16px 44px -28px rgb(36 20 27 / 0.45)" },
+      boxShadow: { soft: "0 10px 30px -18px hsl(var(--foreground) / 0.20)", sheet: "0 -16px 44px -28px hsl(var(--foreground) / 0.25)" },
       fontFamily: { sans: ["var(--font-sans)", "ui-sans-serif", "system-ui"], serif: ["var(--font-serif)", "Georgia", "serif"] },
       keyframes: {
         sheetUp: { from: { transform: "translateY(100%)" }, to: { transform: "translateY(0)" } },

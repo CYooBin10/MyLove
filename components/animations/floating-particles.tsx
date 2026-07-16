@@ -75,11 +75,11 @@ export const FloatingParticles = forwardRef<FloatingParticlesRef, {}>((_, ref) =
 
         if (animationPack === "sparkles") {
           IconComponent = Sparkles;
-          colorClass = "text-amber-400 fill-amber-300";
+          colorClass = "text-accent fill-accent/70";
           animationClass = "animate-burstSparkle";
         } else if (animationPack === "blossom") {
           IconComponent = Flower;
-          colorClass = "text-pink-300 fill-pink-200 dark:text-pink-400 dark:fill-pink-300";
+          colorClass = "text-primary/70 fill-primary/40";
           animationClass = "animate-driftBlossom";
         }
 

@@ -129,7 +129,8 @@ export default function SettingsPage() {
           </Button>
           <Button variant={theme === "system" ? "primary" : "secondary"} size="sm" onClick={() => setTheme("system")}>Hệ thống</Button>
         </div>
-        <div className="mt-4 grid grid-cols-2 gap-2">
+        <div className="mt-4 grid grid-cols-3 gap-2">
+          <Button variant={colorTheme === "pink" ? "primary" : "secondary"} size="sm" onClick={() => setColorTheme("pink")}>Hồng</Button>
           <Button variant={colorTheme === "aqua" ? "primary" : "secondary"} size="sm" onClick={() => setColorTheme("aqua")}>Aqua</Button>
           <Button variant={colorTheme === "red" ? "primary" : "secondary"} size="sm" onClick={() => setColorTheme("red")}>Đỏ</Button>
         </div>
