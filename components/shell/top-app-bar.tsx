@@ -16,12 +16,12 @@ export function TopAppBar() {
   return (
     <header className="safe-top sticky top-0 z-30 bg-background/70 px-4 pb-3 pt-3 backdrop-blur-xl">
       <div className="rounded-[28px] bg-white/55 px-4 py-3 shadow-[0_18px_50px_-36px_rgba(88,39,52,0.65)] backdrop-blur-md dark:bg-card/55">
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <p className="text-[11px] font-semibold text-muted-foreground">MyLove private app</p>
-            <h1 className="text-lg font-black text-foreground">{title}</h1>
+        <div className="flex min-w-0 items-center justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-[11px] font-semibold text-muted-foreground">MyLove private app</p>
+            <h1 className="truncate text-lg font-black text-foreground">{title}</h1>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             <Link href="/gallery" className="flex h-11 w-11 items-center justify-center rounded-full bg-white/75 text-foreground shadow-[0_12px_30px_-22px_rgba(88,39,52,0.55)] dark:bg-card/80">
               <Images className="h-5 w-5" />
             </Link>

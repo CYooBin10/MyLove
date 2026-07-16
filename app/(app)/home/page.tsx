@@ -42,7 +42,7 @@ export default function HomePage() {
   }
 
   return (
-    <ScreenContainer className="relative space-y-4 overflow-visible pb-36">
+    <ScreenContainer className="relative space-y-4 overflow-x-clip pb-36">
       <div className="pointer-events-none absolute -left-20 top-2 h-56 w-56 rounded-full bg-primary/15 blur-3xl" />
       <div className="pointer-events-none absolute -right-24 top-56 h-60 w-60 rounded-full bg-amber-200/30 blur-3xl dark:bg-secondary/10" />
 
